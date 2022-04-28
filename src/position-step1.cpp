@@ -190,7 +190,8 @@ void PositionStep1::time_all_none_acc0_acc1(Profile& profile, double vMax, doubl
             t -= orig / deriv;
         }
 
-        const double h0 = h2_none/(2*jMax*t);
+        //TwinCat avoid 0 Exception
+        const double h0 = (std::abs(jMax * t) < DBL_EPSILON) ? NAN : h2_none / (2 * jMax * t);
         profile.t[0] = h0 + t/2 - a0/jMax;
         profile.t[1] = 0;
         profile.t[2] = t;
@@ -218,7 +219,9 @@ void PositionStep1::time_all_none_acc0_acc1(Profile& profile, double vMax, doubl
             const double orig = h0_acc0/(24*aMax*jMax_jMax) + t*t*(h2_acc0 + h1*(h1 - 2*aMax))/(2*aMax);
             const double deriv = t*(h2_acc0 + h1*(2*h1 - 3*aMax))/aMax;
 
-            t -= orig / deriv;
+            //TwinCat prevent 0 Division
+            if (std::abs(deriv) > DBL_EPSILON)
+                t -= orig / deriv;
         }
 
         profile.t[0] = (-a0 + aMax)/jMax;

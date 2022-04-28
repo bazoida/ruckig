@@ -44,6 +44,11 @@ public:
     // For velocity interface
     template<JerkSigns jerk_signs, Limits limits>
     bool check_for_velocity(double jf, double aMax, double aMin) {
+
+        //TwinCat t[0] isnan
+        if (std::isnan(t[0]))
+            return false;
+
         if (t[0] < 0) {
             return false;
         }
@@ -101,6 +106,12 @@ public:
     // For position interface
     template<JerkSigns jerk_signs, Limits limits, bool set_limits = false>
     bool check(double jf, double vMax, double vMin, double aMax, double aMin) {
+
+        //TwinCat is NAN
+        if (std::isnan(t[0])) {
+            return false;
+        }
+
         if (t[0] < 0) {
             return false;
         }

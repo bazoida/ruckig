@@ -347,9 +347,12 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
                 t -= orig / deriv_newton;
             }
 
-            if (t > tf || std::isnan(t)) {
+            //TwinCat take isnan over t > tf
+            if (std::isnan(t))
                 continue;
-            }
+
+            if (t > tf)
+                continue;
 
             const double h1 = Sqrt((a0_a0 + af_af)/(2*jMax_jMax) + (t*(2*a0 + jMax*t) - vd)/jMax);
 
@@ -436,13 +439,15 @@ bool PositionStep2::time_vel(Profile& profile, double vMax, double vMin, double 
         for (double t: roots) {
             // Double Newton step (regarding pd)
             {
-                double h1 = Sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
+                //Twincat make root absolute
+                double h1 = std::sqrt(std::abs(((af_af - a0_a0) / (2 * jMax_jMax) - ((2 * a0 + jMax * t) * t - vd) / jMax)));
                 double orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
                 double deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;
 
                 t -= orig / deriv_newton;
 
-                h1 = Sqrt((af_af - a0_a0)/(2*jMax_jMax) - ((2*a0 + jMax*t)*t - vd)/jMax);
+                //Twincat make root absolute
+                h1 = std::sqrt(std::abs((af_af - a0_a0) / (2 * jMax_jMax) - ((2 * a0 + jMax * t) * t - vd) / jMax));
                 orig = -pd + (af_p3 - a0_p3 + 3*a0_a0*jMax*(tf - 2*t))/(6*jMax_jMax) + (2*a0 + jMax*t)*t*(tf - t) + (jMax*h1 - af)*h1*h1 + tf*v0;
                 if (std::abs(orig) > 1e-9) {
                     deriv_newton = (a0 + jMax*t)*(2*(af + jMax*tf) - 3*jMax*(h1 + t) - a0)/jMax;

@@ -216,9 +216,11 @@ inline PositiveSet<double, 4> solveQuartMonic(double a, double b, double c, doub
 
     if (std::abs(a) < DBL_EPSILON && std::abs(b) < DBL_EPSILON_SQRT && std::abs(c) < DBL_EPSILON_SQRT && std::abs(d) < DBL_EPSILON) {
         const double e0 = std::cbrt(c * c);
-        const double e1 = (b * b + 12 * d) / (9 * e0);
+        //TwinCat e0 is Zero
+        const double e1 = (std::abs(e0 < DBL_EPSILON)) ? 0 : (b * b + 12 * d) / (9 * e0);
         const double q1 = -(4 * b) / 3 - e0 - e1;
-        const double p1 = std::sqrt(-q1 - 2 * b);
+         //TwinCat absolute Sqrt
+        const double p1 = std::sqrt(std::abs(-q1 - 2 * b));
         const double q2 = 2 * c / p1;
         double D, sqrtD;
 

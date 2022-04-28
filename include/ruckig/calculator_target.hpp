@@ -149,9 +149,14 @@ private:
                 return true;
             }
 
-            const auto div = std::div(*i, degrees_of_freedom);
-            limiting_dof = div.rem;
-            switch (div.quot) {
+            //TwinCat Exchange Methods
+            //const auto div = std::div(*i, degrees_of_freedom);
+            //limiting_dof = div.rem;
+            //switch (div.quot) {
+
+            const auto divQuot = int((int)*i / (int)degrees_of_freedom);
+            const auto divRem = int((int)*i % (int)degrees_of_freedom);
+            limiting_dof = divRem;
                 case 0: {
                     profiles[limiting_dof] = blocks[limiting_dof].p_min;
                 } break;
